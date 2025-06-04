@@ -1,6 +1,10 @@
 package com.lib.nkh.connections.network
 
+import android.Manifest
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.annotation.RequiresPermission
 import com.lib.nkh.connections.connections.VolleyConnection
 import com.lib.nkh.connections.network.NKHConnection.OnConnectionListener
 import com.lib.nkh.connections.network.NKH.Method
@@ -18,6 +22,17 @@ class NKHConnectionBuilder private constructor(private val context: Context) {
     companion object {
         fun with(context: Context): NKHConnectionBuilder {
             return NKHConnectionBuilder(context)
+        }
+
+        @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+        fun isInternetAvailable(context: Context): Boolean {
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val network = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+            return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         }
     }
 

@@ -10,31 +10,36 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.lib.nkh.connections.network.NKHConnection
 import com.lib.nkh.connections.network.NKH.Method
+import com.lib.nkh.connections.network.NKHConnectionBuilder
 
 class VolleyConnection(context: Context) : NKHConnection(context) {
 
     private var mRequestQueue: RequestQueue? = null
 
     override fun execute() {
-        listener?.onStartConnecting()
-        val myRequest = object : StringRequest(
-            getMethod(), url,
-            getSuccessRequestListener(),
-            getErrorRequestListener()
-        ) {
-            override fun getHeaders(): Map<String, String> {
-                return connectionHeaders
-            }
+        if(NKHConnectionBuilder.isInternetAvailable(getContext())) {
+            listener?.onStartConnecting()
+            val myRequest = object : StringRequest(
+                getMethod(), url,
+                getSuccessRequestListener(),
+                getErrorRequestListener()
+            ) {
+                override fun getHeaders(): Map<String, String> {
+                    return connectionHeaders
+                }
 
-            override fun getParams(): Map<String, String> {
-                return connectionBody
-            }
+                override fun getParams(): Map<String, String> {
+                    return connectionBody
+                }
 
-            override fun getPriority(): Priority {
-                return Priority.HIGH
+                override fun getPriority(): Priority {
+                    return Priority.HIGH
+                }
             }
+            addToRequestQueue(myRequest)
+        }else {
+            listener?.onNeedNetworkConnection()
         }
-        addToRequestQueue(myRequest)
     }
 
     override fun cancelPendingRequests(tag: String) {

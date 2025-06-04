@@ -63,6 +63,7 @@ abstract class NKHConnection(private val context: Context) {
     interface OnConnectionListener {
         fun onStartConnecting()
         fun onConnectionCompleted()
+        fun onNeedNetworkConnection()
         fun onConnectionFailed(errorMessage: String, serverResponse: String?, resultCode: Int, connectionInfo: NKHConnectionInfo)
         fun onParseConnectionResultResponse(response: String, connectionInfo: NKHConnectionInfo)
     }
