@@ -30,6 +30,10 @@ class MainActivity: AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "Connection completed", Toast.LENGTH_SHORT).show()
                 }
 
+                override fun onNeedNetworkConnection() {
+                    Toast.makeText(this@MainActivity, "No internet connection", Toast.LENGTH_SHORT).show()
+                }
+
                 override fun onConnectionFailed(
                     errorMessage: String,
                     serverResponse: String?,
